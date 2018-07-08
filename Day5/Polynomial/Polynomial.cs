@@ -532,7 +532,7 @@
         /// <exception cref="ArgumentNullException">throws when o is null</exception>
         private static void IsNull(object o, string name)
         {
-            if (o == null)
+            if (o == null)  // Почему плохо делать этот метот не generic? Ведь чтобы проверить ссылку на null, не нужно знать её тип
             {
                 throw new ArgumentNullException($"{name} is null");
             }
