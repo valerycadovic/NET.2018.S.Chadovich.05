@@ -26,8 +26,14 @@
         /// </summary>
         /// <param name="coeffs">The coefficients.</param>
         /// <exception cref="ArgumentException">throws when coefficients have no values</exception>
+        /// <exception cref="ArgumentNullException">throws when coefficients is null</exception>
         public Polynomial(params double[] coeffs)
         {
+            if (coeffs == null)
+            {
+                throw new ArgumentNullException($"{nameof(coeffs)} is null");
+            }
+
             if (coeffs.Length == 0)
             {
                 throw new ArgumentException($"{coeffs} must have at least one argument");

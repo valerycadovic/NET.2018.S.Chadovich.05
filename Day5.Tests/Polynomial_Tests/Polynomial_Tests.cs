@@ -9,8 +9,12 @@ namespace Day5.Tests.Polynomial_Tests
     public class Polynomial_Tests
     {
         [TestCase()]
-        public void Ctor_Throws_FormatException_When_All_Zeros(params double[] values) =>
+        public void Ctor_Throws_ArgumentException_On_Empty_Params(params double[] values) =>
             Assert.Throws<ArgumentException>(() => new Polynomial(values));
+
+        [Test]
+        public void Ctor_Throws_ArgumentNullException_When_Null() =>
+            Assert.Throws<ArgumentNullException>(() => new Polynomial(null));
 
         [TestCase(new double[] { 1d, 2d, 3d }, new double[] { 1d, 2d, 3d }, ExpectedResult = true)]
         [TestCase(new double[] { 0d, 1d, 2d, 3d }, new double[] { 1d, 2d, 3d }, ExpectedResult = true)]
