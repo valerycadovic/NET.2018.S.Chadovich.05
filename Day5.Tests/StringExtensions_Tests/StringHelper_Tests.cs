@@ -20,24 +20,26 @@ namespace Day5.Tests.StringExtensions_Tests
         [TestCase("10", 5, ExpectedResult = 5)]
         [TestCase("23423523", 10, ExpectedResult = 23423523)]
         public int ToDecimalNotation_Can_Convert_String_Representation_To_Int32(string source, int notationBase) =>
-            source.ToDecimalNotation(new Notation(notationBase));
+            source.ToDecimalNotation(notationBase);
 
         [TestCase("1111111111111111111111111111111111111111111111111111111111111111111111111", 2)]
         public void ToDecimalNotation_Throws_OverflowException_When_Source_Is_Bigger_Than_Int32_MaxValue(string source, int @base) => 
-            Assert.Throws<OverflowException>(() => source.ToDecimalNotation(new Notation(@base)));
+            Assert.Throws<OverflowException>(() => source.ToDecimalNotation(@base));
 
         [TestCase("54fg4", 16)]
         [TestCase("123", 2)]
         [TestCase("...", 7)]
         public void ToDecimalNotation_Throws_FormatException_If_Source_Number_Contains_Wrong_Symbols(string source, int @base) =>
-            Assert.Throws<FormatException>(() => source.ToDecimalNotation(new Notation(@base)));
+            Assert.Throws<FormatException>(() => source.ToDecimalNotation(@base));
 
         [TestCase("", 4)]
         [TestCase(null, 5)]
         public void ToDecimalNotation_Throws_ArgumentException_If_Source_Is_Null_Or_Empty(string source, int @base) =>
-            Assert.Throws<ArgumentException>(() => source.ToDecimalNotation(new Notation(@base)));
+            Assert.Throws<ArgumentException>(() => source.ToDecimalNotation(@base));
 
-        public void ToDecimalNotation_Throws_ArgumentNullException_If_Notation_Is_Null(string source) =>
-            Assert.Throws<ArgumentNullException>(() => source.ToDecimalNotation(null));
+        [TestCase("234234", 17)]
+        [TestCase("4a34", 1)]
+        public void ToDecimalNotation_Throws_ArgumentOutOfRangeException_If_Base_Is_Not_In_Range_Of_2_To_16(string source, int @base) =>
+            Assert.Throws<ArgumentOutOfRangeException>(() => source.ToDecimalNotation(@base));
     }
 }

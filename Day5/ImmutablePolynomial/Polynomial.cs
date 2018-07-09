@@ -4,6 +4,7 @@ namespace Day5.ImmutablePolynomial
 {
     using System;
     using System.Text;
+    using System.Configuration;
 
     /// <summary>
     /// Represents an immutable polynomial with floating-point coefficients
@@ -14,7 +15,7 @@ namespace Day5.ImmutablePolynomial
         /// <summary>
         /// The epsilon
         /// </summary>
-        private const double Epsilon = 10e-10;
+        private static readonly double epsilon;
 
         /// <summary>
         /// The coeffs
@@ -23,6 +24,22 @@ namespace Day5.ImmutablePolynomial
         #endregion
 
         #region Constructors
+
+        /// <summary>
+        /// Initializes the <see cref="Polynomial"/> class.
+        /// </summary>
+        static Polynomial()
+        {
+            try
+            {
+                epsilon = double.Parse(ConfigurationManager.AppSettings["epsilon"]);
+            }
+            catch (Exception)       // ??
+            {
+                epsilon = 10e-10;
+            }
+        }
+
         /// <summary>
         /// Initializes a new instance of the <see cref="Polynomial"/> class.
         /// </summary>
@@ -557,7 +574,7 @@ namespace Day5.ImmutablePolynomial
         /// <param name="a">The a.</param>
         /// <param name="b">The b.</param>
         /// <returns>result of comparison</returns>
-        private static bool CompareDouble(double a, double b) => Math.Abs(a - b) < Epsilon;
+        private static bool CompareDouble(double a, double b) => Math.Abs(a - b) < epsilon;
 
         /// <summary>
         /// Determines whether the specified o is null.
@@ -874,4 +891,4 @@ namespace Day5.ImmutablePolynomial
         #endregion
     }
 }
-// 877 rows ))))))
+// 893 rows ))))))

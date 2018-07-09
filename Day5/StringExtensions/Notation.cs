@@ -5,7 +5,7 @@
     /// <summary>
     /// Provides a set of digits for determined notation and operations th them
     /// </summary>
-    public class Notation
+    internal class Notation
     {
         /// <summary>
         /// All digits available
@@ -43,10 +43,7 @@
         /// <value>
         /// The digits.
         /// </value>
-        public string Digits
-        {
-            get => AllDigits.Substring(0, this.Base);
-        }
+        public string Digits => AllDigits.Substring(0, this.Base);
 
         /// <summary>
         /// Gets the base.

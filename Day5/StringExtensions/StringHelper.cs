@@ -11,24 +11,21 @@
         /// Converts string representation of the n-base number (where n is in range of (2 to 16)) to the decimal notation.
         /// </summary>
         /// <param name="source">The source string.</param>
-        /// <param name="notation">The notation.</param>
+        /// <param name="base">The notation base.</param>
         /// <returns>The represented number.</returns>
         /// <exception cref="ArgumentException">Throws when the source is null or empty</exception>
-        /// <exception cref="ArgumentNullException">Throws when the notation is null</exception>
         /// <exception cref="FormatException">
+        /// <exception cref="ArgumentOutOfRangeException">Throws when notation is out of the range of 2 to 16</exception>
         /// Throws when the source has a symbol not from the range of notation digits
         /// </exception>
-        public static int ToDecimalNotation(this string source, Notation notation)
+        public static int ToDecimalNotation(this string source, int @base)
         {
             if (string.IsNullOrEmpty(source))
             {
                 throw new ArgumentException($"{nameof(source)} is null or empty");
             }
-
-            if (notation == null)
-            {
-                throw new ArgumentNullException($"{nameof(notation)} is null");
-            }
+            
+            Notation notation = new Notation(@base);
 
             string toIterate = source.ToUpper().TrimStart('0');         // convert no normalized form
                                                                         // to prevent false overflow
