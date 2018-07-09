@@ -18,6 +18,9 @@
         /// The string representation of the polynomial
         /// </summary>
         private readonly string stringRepresentation;
+
+
+        private readonly double[] coeffs;
         #endregion
 
         #region Constructors
@@ -43,29 +46,21 @@
 
             if (firstNonZero == -1)
             {
-                this.Coeffs = new double[] { 0.0 };
+                this.coeffs = new double[] { 0.0 };
                 this.stringRepresentation = this.FormStringRepresentation();
                 return;
             }
 
             this.Power = coeffs.Length - firstNonZero - 1;
 
-            this.Coeffs = new double[this.Power + 1];
-            Array.Copy(coeffs, firstNonZero, this.Coeffs, 0, this.Power + 1);
+            this.coeffs = new double[this.Power + 1];
+            Array.Copy(coeffs, firstNonZero, this.coeffs, 0, this.Power + 1);
 
             this.stringRepresentation = this.FormStringRepresentation();
         }
         #endregion
 
         #region Properties
-        /// <summary>
-        /// Gets the set of coefficients if polynomial
-        /// </summary>
-        /// <value>
-        /// The coefficients.
-        /// </value>
-        public double[] Coeffs { get; }
-
         /// <summary>
         /// Gets the power of the polynomial
         /// </summary>
@@ -96,7 +91,7 @@
                 return false;
             }
 
-            return ValueEquals(lhs.Coeffs, rhs.Coeffs);
+            return ValueEquals(lhs.Coeffs(), rhs.Coeffs());
         }
 
         /// <summary>
@@ -128,7 +123,7 @@
             IsNull(lhs, nameof(lhs));
             IsNull(rhs, nameof(rhs));
 
-            double[] result = Sum(lhs.Coeffs, rhs.Coeffs);
+            double[] result = Sum(lhs.Coeffs(), rhs.Coeffs());
 
             return new Polynomial(result);
         }
@@ -149,7 +144,7 @@
             IsNull(lhs, nameof(lhs));
             IsNull(rhs, nameof(rhs));
 
-            double[] result = Sum(lhs.Coeffs, rhs);
+            double[] result = Sum(lhs.Coeffs(), rhs);
 
             return new Polynomial(result);
         }
@@ -170,7 +165,7 @@
             IsNull(lhs, nameof(lhs));
             IsNull(rhs, nameof(rhs));
 
-            double[] result = Sum(lhs, rhs.Coeffs);
+            double[] result = Sum(lhs, rhs.Coeffs());
 
             return new Polynomial(result);
         }
@@ -191,7 +186,7 @@
             IsNull(lhs, nameof(lhs));
             IsNull(rhs, nameof(rhs));
 
-            double[] result = Diff(lhs.Coeffs, rhs.Coeffs);
+            double[] result = Diff(lhs.Coeffs(), rhs.Coeffs());
 
             return new Polynomial(result);
         }
@@ -212,7 +207,7 @@
             IsNull(lhs, nameof(lhs));
             IsNull(rhs, nameof(rhs));
 
-            double[] result = Diff(lhs.Coeffs, rhs);
+            double[] result = Diff(lhs.Coeffs(), rhs);
 
             return new Polynomial(result);
         }
@@ -233,7 +228,7 @@
             IsNull(lhs, nameof(lhs));
             IsNull(rhs, nameof(rhs));
 
-            double[] result = Diff(lhs, rhs.Coeffs);
+            double[] result = Diff(lhs, rhs.Coeffs());
 
             return new Polynomial(result);
         }
@@ -254,7 +249,7 @@
             IsNull(lhs, nameof(lhs));
             IsNull(rhs, nameof(rhs));
 
-            double[] result = Mul(lhs.Coeffs, rhs.Coeffs);
+            double[] result = Mul(lhs.Coeffs(), rhs.Coeffs());
 
             return new Polynomial(result);
         }
@@ -274,7 +269,7 @@
         {
             IsNull(lhs, nameof(lhs));
 
-            double[] result = Mul(lhs.Coeffs, rhs);
+            double[] result = Mul(lhs.Coeffs(), rhs);
 
             return new Polynomial(result);
         }
@@ -294,7 +289,7 @@
         {
             IsNull(rhs, nameof(rhs));
 
-            double[] result = Mul(rhs.Coeffs, lhs);
+            double[] result = Mul(rhs.Coeffs(), lhs);
 
             return new Polynomial(result);
         }
@@ -326,7 +321,7 @@
         /// <returns>
         /// A hash code for this instance, suitable for use in hashing algorithms and data structures like a hash table. 
         /// </returns>
-        public override int GetHashCode() => this.Coeffs.GetHashCode();
+        public override int GetHashCode() => this.coeffs.GetHashCode();
 
         /// <summary>
         /// Returns a <see cref="System.String" /> that represents this instance.
@@ -337,6 +332,22 @@
         public override string ToString()
         {
             return this.stringRepresentation;
+        }
+        #endregion
+
+        #region Public instance api
+        /// <summary>
+        /// Gets the set of coefficients if polynomial
+        /// </summary>
+        /// <value>
+        /// The coefficients.
+        /// </value>
+        public double[] Coeffs()
+        {
+            double[] result = new double[this.coeffs.Length];
+            Array.Copy(this.coeffs, result, this.coeffs.Length);
+
+            return result;
         }
         #endregion
 
@@ -548,7 +559,7 @@
         {
             if (this.Power == 0)
             {
-                return this.Coeffs[0].ToString();
+                return this.coeffs[0].ToString();
             }
 
             StringBuilder sb = new StringBuilder();
@@ -573,9 +584,9 @@
         {
             StringBuilder sb = new StringBuilder();
 
-            if (!CompareDouble(this.Coeffs[0], 1))
+            if (!CompareDouble(this.coeffs[0], 1))
             {
-                sb.Append(this.Coeffs[0]);
+                sb.Append(this.coeffs[0]);
             }
 
             sb.Append(this.Power > 1 ? $"x^{this.Power}" : "x");
@@ -591,14 +602,14 @@
         {
             StringBuilder sb = new StringBuilder();
 
-            for (int i = 1; i < this.Coeffs.Length - 1; i++)
+            for (int i = 1; i < this.coeffs.Length - 1; i++)
             {
-                if (CompareDouble(this.Coeffs[i], 0.0))
+                if (CompareDouble(this.coeffs[i], 0.0))
                 {
                     continue;
                 }
 
-                sb.Append(this.Coeffs[i] < 0 ? " - " : " + ");
+                sb.Append(this.coeffs[i] < 0 ? " - " : " + ");
                 sb.Append(this.FormTerm(i));
             }
 
@@ -611,17 +622,17 @@
         /// <returns>Formed last term of the polynomial</returns>
         private string FormLast()
         {
-            int last = this.Coeffs.Length - 1;
+            int last = this.coeffs.Length - 1;
 
-            if (CompareDouble(this.Coeffs[last], 0.0))
+            if (CompareDouble(this.coeffs[last], 0.0))
             {
                 return string.Empty;
             }
 
             StringBuilder sb = new StringBuilder();
 
-            sb.Append(this.Coeffs[last] < 0 ? " - " : " + ");
-            sb.Append(Math.Abs(this.Coeffs[last]));
+            sb.Append(this.coeffs[last] < 0 ? " - " : " + ");
+            sb.Append(Math.Abs(this.coeffs[last]));
 
             return sb.ToString();
         }
@@ -636,9 +647,9 @@
             StringBuilder sb = new StringBuilder();
             int currentPower = this.Power - index;
 
-            if (!CompareDouble(this.Coeffs[index], 1.0))
+            if (!CompareDouble(this.coeffs[index], 1.0))
             {
-                sb.Append(Math.Abs(this.Coeffs[index]));
+                sb.Append(Math.Abs(this.coeffs[index]));
             }
 
             sb.Append(currentPower == 1 ? "x" : $"x^{currentPower}");

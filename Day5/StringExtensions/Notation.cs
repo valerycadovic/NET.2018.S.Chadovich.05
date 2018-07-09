@@ -33,10 +33,10 @@
             {
                 throw new ArgumentOutOfRangeException($"{nameof(@base)} must be in the range of 2 to 16");
             }
-
+            
             this.Base = @base;
         }
-
+        
         /// <summary>
         /// Gets the digits.
         /// </summary>
