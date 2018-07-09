@@ -17,7 +17,7 @@ namespace Day5.Tests.Polynomial_Tests
             Assert.Throws<ArgumentNullException>(() => new Polynomial(null));
 
         [TestCase(new double[] { 1d, 2d, 3d }, new double[] { 1d, 2d, 3d }, ExpectedResult = true)]
-        [TestCase(new double[] { 0d, 1d, 2d, 3d }, new double[] { 1d, 2d, 3d }, ExpectedResult = true)]
+        [TestCase(new double[] { 1d, 2d, 3d, 0d }, new double[] { 1d, 2d, 3d }, ExpectedResult = true)]
         [TestCase(new double[] { 1d, 2d }, new double[] { 1d, 2d, 3d }, ExpectedResult = false)]
         [TestCase(new double[] { 1d, 2d }, new double[] { 2d, 3d }, ExpectedResult = false)]
         [TestCase(new double[] { 1.1999999999, -5.89999999999 }, new double[] { 1.2, -5.9 }, ExpectedResult = true)]
@@ -47,8 +47,8 @@ namespace Day5.Tests.Polynomial_Tests
             Assert.IsFalse(a == b);
         }
 
-        [TestCase(new double[] { 1d, 2d }, new double[] { 1d, 2d, 3d }, new double[] { 1d, 3d, 5d })]
-        [TestCase(new double[] { 15.5, -27.1, 0.0, 0.0, 345.223 }, new double[] { 35, 0.0, 1, 56 }, new double[] { 15.5, 7.9, 0.0, 1.0, 401.223 })]
+        [TestCase(new double[] { 1d, 2d }, new double[] { 1d, 2d, 3d }, new double[] { 2d, 4d, 3d })]
+        [TestCase(new double[] { 15.5, -27.1, 0.0, 0.0, 345.223 }, new double[] { 35, 0.0, 1, 56 }, new double[] { 50.5, -27.1, 1.0, 56, 345.223 })]
         public void Operator_Plus_Sums(double[] l, double[] r, double[] expectedResult)
         {
             Polynomial lhs = new Polynomial(l);
@@ -60,11 +60,11 @@ namespace Day5.Tests.Polynomial_Tests
             Assert.IsTrue(result == expected);
         }
 
-        [TestCase(new double[] { 1d, 2d }, new double[] { 1d, 2d, 3d }, new double[] { -1d, -1d, -1d })]
+        [TestCase(new double[] { 1d, 2d }, new double[] { 1d, 2d, 3d }, new double[] { 0d, 0d, -3d })]
         [TestCase(
             new double[] { 15.5, -27.1, 0.0, 0.0, 345.223 },
             new double[] { 35, 0.0, 1, 56 },
-            new double[] { 15.5, -62.1, 0.0, -1.0, 289.223 })]
+            new double[] { -19.5, -27.1, -1.0, -56.0, 345.223 })]
         public void Operator_Minus_Takes_Away(double[] l, double[] r, double[] expectedResult)
         {
             Polynomial lhs = new Polynomial(l);
@@ -109,7 +109,7 @@ namespace Day5.Tests.Polynomial_Tests
         }
 
         [TestCase(new double[] { 1d, 2d, 3d }, new double[] { 1d, 2d, 3d }, ExpectedResult = true)]
-        [TestCase(new double[] { 0d, 1d, 2d, 3d }, new double[] { 1d, 2d, 3d }, ExpectedResult = true)]
+        [TestCase(new double[] { 1d, 2d, 3d, 0d }, new double[] { 1d, 2d, 3d }, ExpectedResult = true)]
         [TestCase(new double[] { 1d, 2d }, new double[] { 1d, 2d, 3d }, ExpectedResult = false)]
         [TestCase(new double[] { 1d, 2d }, new double[] { 2d, 3d }, ExpectedResult = false)]
         [TestCase(new double[] { 1.19999999999, -5.89999999999 }, new double[] { 1.2, -5.9 }, ExpectedResult = true)]
@@ -130,12 +130,14 @@ namespace Day5.Tests.Polynomial_Tests
 
             HashSet<Polynomial> hs = new HashSet<Polynomial>(new Polynomial[] { a, b, c });
 
-            Assert.AreEqual(2, hs.Count);
+            Assert.AreEqual(1, hs.Count);
         }
 
-        [TestCase(new double[] { 1d, 2d, 3d }, ExpectedResult = "x^2 + 2x + 3")]
-        [TestCase(new double[] { 1d, 2d }, ExpectedResult = "x + 2")]
-        [TestCase(new double[] { 1.19999999999, -5.89999999999 }, ExpectedResult = "1,19999999999x - 5,89999999999")]
+        [TestCase(new double[] { 1d, 2d, 3d }, ExpectedResult = "3x^2 + 2x + 1")]
+        [TestCase(new double[] { 0d, 2d, 3d }, ExpectedResult = "3x^2 + 2x")]
+        [TestCase(new double[] { 1d, 2d }, ExpectedResult = "2x + 1")]
+        [TestCase(new double[] { 0.0, -1, -1.0, -56.0, 345.223 }, ExpectedResult = "345,223x^4 - 56x^3 - x^2 - x")]
+        [TestCase(new double[] { 1.19999999999, -5.89999999999 }, ExpectedResult = "-5,89999999999x + 1,19999999999")]
         public string Overrided_ToString_Is_Correct(double[] l)
         {
             Polynomial lhs = new Polynomial(l);
