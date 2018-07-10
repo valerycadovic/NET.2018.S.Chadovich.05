@@ -84,12 +84,15 @@ namespace Day5.ImmutablePolynomial
         {
             get
             {
-                if (index < 0 || index > this.coeffs.Length)
-                {
-                    throw new ArgumentOutOfRangeException($"{nameof(index)} is out of polynomial");
-                }
+                ValidateOutOfRange(index);
 
                 return this.coeffs[index];
+            }
+            private set                         // not used inside
+            {
+                ValidateOutOfRange(index);
+
+                this.coeffs[index] = value;
             }
         }
         #endregion
@@ -888,7 +891,20 @@ namespace Day5.ImmutablePolynomial
 
             return sb.ToString();
         }
+
+        /// <summary>
+        /// Validates the out of range.
+        /// </summary>
+        /// <param name="index">The index.</param>
+        /// <exception cref="ArgumentOutOfRangeException">index</exception>
+        private void ValidateOutOfRange(int index)
+        {
+            if (index < 0 || index > this.coeffs.Length)
+            {
+                throw new ArgumentOutOfRangeException($"{nameof(index)} is out of polynomial");
+            }
+        }
         #endregion
     }
 }
-// 893 rows ))))))
+// 910 rows ))))))
