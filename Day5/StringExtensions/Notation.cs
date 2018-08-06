@@ -8,11 +8,6 @@
     internal class Notation
     {
         /// <summary>
-        /// All digits available
-        /// </summary>
-        private const string AllDigits = "0123456789ABCDEF";
-
-        /// <summary>
         /// The minimal base
         /// </summary>
         private const int Min = 2;
@@ -29,21 +24,24 @@
         /// <exception cref="ArgumentOutOfRangeException">Throws when notation is out of the range of 2 to 16</exception>
         public Notation(int @base)
         {
+            const string allDigits = "0123456789ABCDEF";
+
             if (@base > Max || @base < Min)
             {
                 throw new ArgumentOutOfRangeException($"{nameof(@base)} must be in the range of 2 to 16");
             }
             
             this.Base = @base;
+            this.Digits = allDigits.Substring(0, this.Base);
         }
-        
+
         /// <summary>
         /// Gets the digits.
         /// </summary>
         /// <value>
         /// The digits.
         /// </value>
-        public string Digits => AllDigits.Substring(0, this.Base);
+        public string Digits { get; }
 
         /// <summary>
         /// Gets the base.
